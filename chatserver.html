@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Messanger</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="chatserver.css">
+  <script>
+    let msgtexts = "";
+    var scrolled = false;
+    function updateScroll() {
+      if (!scrolled) {
+        var element = document.getElementById("messages_scrool");
+        element.scrollTop = element.scrollHeight;
+      }
+    }
+    $("#messages_scrool").on('scroll', function () {
+      scrolled = true;
+    });
+
+    function sendMessage() {
+      let name_changer = document.getElementById("name");
+      let message_changer = document.getElementById("message");
+
+      if (name_changer.value === "")
+        alert('Enter your name');
+      else if (message_changer.value == "")
+        alert("You cannot send an empty message");
+      else {
+        let msg = { name: name_changer.value, message: message_changer.value };
+        message_changer.value = "";
+
+        fetch("/msg", {
+          method: "POST",
+          headers: { "Contet-Type": "application/json;charset=utf-8" },
+          body: JSON.stringify(msg)
+        });
+      }
+    }
+
+    function getMessages() {
+      fetch("/msg", { method: "GET" })
+        .then((result) => {
+          return result.text();
+        })
+        .then((text) => {
+          let messages_pane = document.getElementById("messages_pane");
+          let msgs = JSON.parse(text);
+          let msgtext_tmp = "";
+
+          for (var i = 0; i < lengths(msgs) - 1; i++) /*message of msgs)*/
+            msgtext_tmp += `<div class="msgs"> ${msgs[i].name}: ${msgs[i].message} </div><br>`;
+          msgtext_tmp += `<div class="msgs_last"> ${msgs[i].name}: ${msgs[i].message} </div><br>`;
+          if (msgtext_tmp != msgtexts)
+            messages_pane.innerHTML = msgtexts = msgtext_tmp;
+          tick();
+        });
+    }
+
+    function lengths(obj) {
+      var size = 0,
+        key;
+      for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+      }
+      return size;
+    };
+
+    function tick() {
+      setTimeout(getMessages, 500);
+    }
+
+    function runScript(event) {
+      if (event.which == 13 || event.keyCode == 13) {
+        sendMessage();
+      }
+    }
+
+  </script>
+</head>
+
+<body onload="tick();">
+  <div class="all" style="height: 70vh; width: 50vw;">
+    <div class="messages" style="overflow-y: scroll; height: 70vh; width: 50vw;" id="messages_scrool">
+      <div id="messages_pane"></div>
+    </div>
+
+    <input class="msg" type="text" id="message" onkeypress="runScript(event)" placeholder="Type message..." /><br>
+    <input class="name" type="text" id="name" placeholder="Your name" />
+    <button onclick="sendMessage();" id="send_msg_bttn">Send Message</button>
+  </div>
+</body>
+
+</html>
