@@ -49,7 +49,9 @@ const requestListener = function (req, res) {
   }
 };
 
-// creating server
-const port = 8000;
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 const server = http.createServer(requestListener);
 server.listen(port);
