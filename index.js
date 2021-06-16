@@ -29,10 +29,10 @@ const requestListener = function (req, res) {
       });
   } else if (req.url === "/msg" && req.method === "POST") {
     let data = "";
-    req.once('data', chunk => {
+    req.on('data', chunk => {
       data += chunk;
     })
-    req.once('end', () => {
+    req.on('end', () => {
       let new_msg = JSON.parse(data);
       messages.push(new_msg);
       console.log(`New msg added - { name: "${new_msg.name}", message: "${new_msg.message}" }.`);
