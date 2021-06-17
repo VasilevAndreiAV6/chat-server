@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Messanger</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="chatserver.css">
+</head>
+
+<body onload="SendMessage()">
+  <div class="all" style="height: 70vh; width: 50vw;">
+    <div class="messages" id="messages_scroll"></div>
+    <input type="text" onkeypress="runScript(event)" id="msg_input" placeholder="Type message..." /><br>
+    <input type="text" id="name_input" placeholder="Your name" />
+    <button onclick="SendMessage();" id="send_msg_bttn">Send Message</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"> </script>
+  <script>
+    var socket = io();
+
+    var messages = document.getElementById('messages_scroll');
+    var form = document.getElementById('form');
+    var msg_input = document.getElementById('msg_input');
+    var name_input = document.getElementById('name_input');
+
+    function runScript(event) {
+      if (event.which == 13 || event.keyCode == 13) {
+        SendMessage();
+      }
+    }
+
+    function SendMessage() {
+      //if (msg_input.value && name_input.value) {
+      socket.emit('chat message', JSON.stringify({ name: name_input.value, message: msg_input.value }));
+      msg_input.value = '';
+      //}
+    }
+
+    socket.on('chat message', function (msg) {
+      let msgs = JSON.parse(msg);
+
+      let i = lengths(msgs) - 1;
+      messages.innerHTML = '';
+      messages.innerHTML += `<div class="msgs_last"> ${msgs[i].name}: ${msgs[i].message} </div><br>`;
+      for (i = lengths(msgs) - 2; i >= 0; i--)
+        messages.innerHTML += `<div class="msgs"> ${msgs[i].name}: ${msgs[i].message} </div><br>`;
+    });
+
+    function lengths(obj) {
+      var size = 0,
+        key;
+      for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+      }
+      return size;
+    };
+  </script>
+</body>
+
+</html>

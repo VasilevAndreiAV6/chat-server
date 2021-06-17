@@ -1,57 +1,26 @@
-const http = require("http");
-const fs = require('fs').promises;
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-// requests handle
 let messages = [];
 
-const requestListener = function (req, res) {
-  if (req.url === "/") {
-    fs.readFile(`${__dirname}/chatserver.html`)
-      .then((html_content) => {
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end(html_content);
-        console.log(
-          `Request: ${req.method}, ${req.url}.`
-        );
+app.use(express.static('public'));
 
-      });
-  } else if (req.url.endsWith(".css")) {
-    fs.readFile(`${__dirname}/chatserver.css`)
-      .then((css_content) => {
-        res.setHeader("Content-Type", "text/css");
-        res.writeHead(200);
-        res.end(css_content);
-        console.log(
-          `Request: ${req.method}, ${req.url}.`
-        );
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    if (JSON.parse(msg).name != "" || JSON.parse(msg).message != "") {
+      messages.push(JSON.parse(msg));
+      console.log('message: ' + JSON.stringify(messages));
+    }
+  });
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', JSON.stringify(messages));
+  });
+});
 
-      });
-  } else if (req.url === "/msg" && req.method === "POST") {
-    let data = "";
-    req.on('data', chunk => {
-      data += chunk;
-    })
-    req.on('end', () => {
-      let new_msg = JSON.parse(data);
-      messages.push(new_msg);
-      console.log(`New msg added - { name: "${new_msg.name}", message: "${new_msg.message}" }.`);
-      res.end();
-    })
-  } else if (req.url === "/msg" && req.method === "GET") {
-    res.setHeader("Content-Type", "text");
-    res.writeHead(200);
-    res.end(JSON.stringify(messages));
-  } else {
-    res.writeHead(404);
-    res.end("Not found");
-    return;
-  }
-};
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
-const server = http.createServer(requestListener);
-server.listen(port);
+server.listen(3000, () => {
+  console.log('listening on: 3000');
+});

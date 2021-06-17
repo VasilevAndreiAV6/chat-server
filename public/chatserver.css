@@ -1,0 +1,133 @@
+body, * {
+  padding: 0px;
+  margin: 0px;
+}
+
+button {
+  font-size: 16px;
+  font-family: Arial, Helvetica, monospace;
+  padding: 5px;
+  width: 29%;
+  padding: 12px 12px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.msgs {
+  vertical-align: middle;
+  border: 0px;
+  border-radius: 30px;
+  border-color: #d5d5d5;
+  background-color: #e1e1e1;
+  padding: 10px;
+  margin: 0px 10px;
+  width: fit-content;
+  position: relative;
+  animation-name: msg;
+  animation-duration: 0.5s;
+}
+
+.msgs, .msgs_last {
+  position: relative;
+  top: -20px;
+}
+
+.msgs_last {
+  vertical-align: middle;
+  border: 0px;
+  border-radius: 30px;
+  border-color: #d5d5d5;
+  background-color: #e1e1e1;
+  padding: 10px;
+  margin: 0px 10px;
+  width: fit-content;
+  position: relative;
+  animation-name: last;
+  animation-duration: 0.3s;
+}
+
+@keyframes msg {
+  from {top: 40px;}
+  to   {top: -20px;}
+}
+
+@keyframes last {
+  from {
+    padding: 0px;
+    margin: 0px 0px;
+    background-color: #ededed00;
+    color: white;
+  }
+  to {
+    padding: 10px;
+    margin: 0px 10px;
+    background-color:#ededed;
+    color: black;
+  }
+}
+
+.all {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+#msg_input {
+  font-size: 16px;
+  font-family: Arial, Helvetica, monospace;
+  padding: 5px;
+  width: 100%;
+  padding: 12px 12px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#name_input {
+  font-size: 16px;
+  font-family: Arial, Helvetica, monospace;
+  padding: 5px;
+  width: 70%;
+  padding: 12px 12px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-left: inherit;
+  margin-right: inherit;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  overflow-y: scroll;
+  height: 70vh;
+  width: 50vw;
+}
+
+/* width */
+.messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.messages::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.messages::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.messages::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
