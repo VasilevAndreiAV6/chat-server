@@ -11,7 +11,7 @@
   <div class="all" style="height: 70vh; width: 50vw;">
     <div class="messages" id="messages_scroll"></div>
     <input type="text" onkeypress="runScript(event)" id="msg_input" placeholder="Type message..." /><br>
-    <input type="text" id="name_input" placeholder="Your name" />
+    <input type="text" id="name_input" placeholder="Your name" onchange="setNameCookie();" />
     <button onclick="SendMessage();" id="send_msg_bttn">Send Message</button>
   </div>
 
@@ -31,6 +31,7 @@
     }
 
     function SendMessage() {
+      onLoad();
       //if (msg_input.value && name_input.value) {
       socket.emit('chat message', JSON.stringify({ name: name_input.value, message: msg_input.value }));
       msg_input.value = '';
@@ -55,6 +56,28 @@
       }
       return size;
     };
+
+    function onLoad() {
+      const name_changer = document.getElementById("name_input");
+      let name_fromm_cookie = getCookie('name');;
+      if (name_fromm_cookie) name_changer.value = name_fromm_cookie;
+    }
+
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    //
+    //  Setting name to cookie
+    //
+    function setNameCookie() {
+      const name_changer = document.getElementById("name_input");
+      document.cookie = `name=${name_changer.value}`;
+    }
+
   </script>
 </body>
 

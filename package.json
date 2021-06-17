@@ -1,7 +1,6 @@
 {
   "name": "char-server-2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +9,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^4.1.2"
-  }
+    "socket.io": "^4.1.2",
+    "socketio": "^1.0.0"
+  },
+  "devDependencies": {},
+  "description": ""
 }
